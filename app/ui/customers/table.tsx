@@ -1,10 +1,12 @@
 import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
+import { audiowide, lusitana } from '@/app/ui/fonts';
 import Search from '@/app/ui/search';
 import {
   CustomersTableType,
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
+import { Audiowide } from 'next/font/google';
+
 
 export default async function CustomersTable({
   customers,
@@ -13,7 +15,7 @@ export default async function CustomersTable({
 }) {
   return (
     <div className="w-full">
-      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
+      <h1 className={`${audiowide.className} mb-8 text-xl md:text-2xl`}>
         Customers
       </h1>
       <Search placeholder="Search customers..." />
