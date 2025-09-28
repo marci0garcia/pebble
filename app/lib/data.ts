@@ -1,9 +1,13 @@
 import postgres from 'postgres';
 import {
   Revenue,
+  User,
+  Project,
+  Issue,
+  Label,
+  IssueWithLabels,
 } from './definitions';
 import { formatCurrency } from './utils';
-import { mockProjects, mockIssues } from './mock-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -26,20 +30,104 @@ export async function fetchRevenue() {
   }
 }
 
+// Fetch all projects
+export async function fetchProjects() {
+  try {
+    const projects = await sql<Project[]>`
+      SELECT * FROM projects 
+      ORDER BY created_at DESC
+    `;
+    return projects;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch projects.');
+  }
+}
+
+// Fetch all users
+export async function fetchUsers() {
+  try {
+    const users = await sql<User[]>`
+      SELECT * FROM users 
+      ORDER BY name ASC
+    `;
+    return users;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch users.');
+  }
+}
+
+// Fetch all labels
+export async function fetchLabels() {
+  try {
+    const labels = await sql<Label[]>`
+      SELECT * FROM labels 
+      ORDER BY name ASC
+    `;
+    return labels;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch labels.');
+  }
+}
+
+// Fetch issues for a specific project with labels and assignee info
+export async function fetchProjectIssues(projectId: string) {
+  try {
+    const issues = await sql<Issue[]>`
+      SELECT i.*, u.name as assignee_name, u.email as assignee_email
+      FROM issues i
+      LEFT JOIN users u ON i.assignee_id = u.id
+      WHERE i.project_id = ${projectId}
+      ORDER BY i.created_at DESC
+    `;
+
+    // Fetch labels for each issue
+    const issuesWithLabels: IssueWithLabels[] = [];
+    for (const issue of issues) {
+      const labels = await sql<Label[]>`
+        SELECT l.* FROM labels l
+        JOIN issue_labels il ON l.id = il.label_id
+        WHERE il.issue_id = ${issue.id}
+      `;
+      
+      issuesWithLabels.push({
+        ...issue,
+        labels,
+        assignee: (issue as any).assignee_name ? {
+          id: issue.assignee_id!,
+          name: (issue as any).assignee_name,
+          email: (issue as any).assignee_email,
+        } : undefined,
+      });
+    }
+
+    return issuesWithLabels;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project issues.');
+  }
+}
+
 export async function fetchLatestTasks() {
   try {
-    // Return mock data for latest tasks instead of database queries
-    const latestTasks = mockIssues
-      .slice(0, 5)
-      .map((task) => ({
-        id: task.id,
-        title: task.title,
-        status: task.status,
-        assigneeId: task.assigneeId,
-        type: task.type,
-      }));
+    const tasks = await sql<Issue[]>`
+      SELECT i.*, u.name as assignee_name
+      FROM issues i
+      LEFT JOIN users u ON i.assignee_id = u.id
+      ORDER BY i.created_at DESC
+      LIMIT 5
+    `;
     
-    return latestTasks;
+    return tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      status: task.status,
+      assignee_id: task.assignee_id,
+      type: task.type,
+      assignee_name: (task as any).assignee_name,
+    }));
   } catch (error) {
     console.error('Error:', error);
     throw new Error('Failed to fetch the latest tasks.');
@@ -48,17 +136,18 @@ export async function fetchLatestTasks() {
 
 export async function fetchCardData() {
   try {
-    // Use mock data for card statistics
-    const totalProjects = mockProjects.length;
-    const totalTasks = mockIssues.length;
-    const completedTasks = mockIssues.filter(task => task.status === 'DONE').length;
-    const pendingTasks = mockIssues.filter(task => task.status === 'TODO' || task.status === 'IN_PROGRESS' || task.status === 'IN_REVIEW').length;
+    const [projectCount, taskCount, completedCount, pendingCount] = await Promise.all([
+      sql`SELECT COUNT(*) as count FROM projects`,
+      sql`SELECT COUNT(*) as count FROM issues`,
+      sql`SELECT COUNT(*) as count FROM issues WHERE status = 'DONE'`,
+      sql`SELECT COUNT(*) as count FROM issues WHERE status IN ('TODO', 'IN_PROGRESS', 'IN_REVIEW')`,
+    ]);
 
     return {
-      numberOfProjects: totalProjects,
-      numberOfTasks: totalTasks,
-      completedTasks: completedTasks,
-      pendingTasks: pendingTasks,
+      numberOfProjects: Number(projectCount[0].count),
+      numberOfTasks: Number(taskCount[0].count),
+      completedTasks: Number(completedCount[0].count),
+      pendingTasks: Number(pendingCount[0].count),
     };
   } catch (error) {
     console.error('Error:', error);
@@ -75,17 +164,21 @@ export async function fetchFilteredTasks(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    // Filter tasks based on query
-    const filteredTasks = mockIssues.filter(task =>
-      task.title.toLowerCase().includes(query.toLowerCase()) ||
-      task.description?.toLowerCase().includes(query.toLowerCase()) ||
-      task.status.toLowerCase().includes(query.toLowerCase()) ||
-      task.type.toLowerCase().includes(query.toLowerCase())
-    );
+    const tasks = await sql<Issue[]>`
+      SELECT i.*, u.name as assignee_name
+      FROM issues i
+      LEFT JOIN users u ON i.assignee_id = u.id
+      WHERE 
+        i.title ILIKE ${`%${query}%`} OR 
+        i.description ILIKE ${`%${query}%`} OR 
+        i.status ILIKE ${`%${query}%`} OR 
+        i.type ILIKE ${`%${query}%`}
+      ORDER BY i.created_at DESC
+      LIMIT ${ITEMS_PER_PAGE}
+      OFFSET ${offset}
+    `;
 
-    // Paginate the results
-    const paginatedTasks = filteredTasks.slice(offset, offset + ITEMS_PER_PAGE);
-    return paginatedTasks;
+    return tasks;
   } catch (error) {
     console.error('Error:', error);
     throw new Error('Failed to fetch tasks.');
@@ -94,15 +187,16 @@ export async function fetchFilteredTasks(
 
 export async function fetchTasksPages(query: string) {
   try {
-    // Filter tasks based on query
-    const filteredTasks = mockIssues.filter(task =>
-      task.title.toLowerCase().includes(query.toLowerCase()) ||
-      task.description?.toLowerCase().includes(query.toLowerCase()) ||
-      task.status.toLowerCase().includes(query.toLowerCase()) ||
-      task.type.toLowerCase().includes(query.toLowerCase())
-    );
+    const countResult = await sql`
+      SELECT COUNT(*) as count FROM issues
+      WHERE 
+        title ILIKE ${`%${query}%`} OR 
+        description ILIKE ${`%${query}%`} OR 
+        status ILIKE ${`%${query}%`} OR 
+        type ILIKE ${`%${query}%`}
+    `;
 
-    const totalPages = Math.ceil(filteredTasks.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(Number(countResult[0].count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
     console.error('Error:', error);
@@ -112,13 +206,35 @@ export async function fetchTasksPages(query: string) {
 
 export async function fetchTaskById(id: string) {
   try {
-    const task = mockIssues.find(task => task.id === id);
+    const tasks = await sql<Issue[]>`
+      SELECT i.*, u.name as assignee_name, u.email as assignee_email
+      FROM issues i
+      LEFT JOIN users u ON i.assignee_id = u.id
+      WHERE i.id = ${id}
+    `;
     
-    if (!task) {
+    if (tasks.length === 0) {
       throw new Error(`Task with id ${id} not found`);
     }
 
-    return task;
+    const task = tasks[0];
+    
+    // Fetch labels for this task
+    const labels = await sql<Label[]>`
+      SELECT l.* FROM labels l
+      JOIN issue_labels il ON l.id = il.label_id
+      WHERE il.issue_id = ${id}
+    `;
+
+    return {
+      ...task,
+      labels,
+      assignee: (task as any).assignee_name ? {
+        id: task.assignee_id!,
+        name: (task as any).assignee_name,
+        email: (task as any).assignee_email,
+      } : undefined,
+    } as IssueWithLabels;
   } catch (error) {
     console.error('Error:', error);
     throw new Error('Failed to fetch task.');

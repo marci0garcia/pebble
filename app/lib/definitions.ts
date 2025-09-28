@@ -1,14 +1,69 @@
 // This file contains type definitions for your data.
 // It describes the shape of the data, and what data type each property should accept.
-// For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
+// These types match the database schema structure.
+
+// User type for the database
 export type User = {
   id: string;
   name: string;
   email: string;
-  password: string;
+  avatar_url?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
+// Project type for the database
+export type Project = {
+  id: string;
+  name: string;
+  key: string;
+  description?: string;
+  avatar_url?: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+// Issue/Task type for the database
+export type Issue = {
+  id: string;
+  key: string;
+  title: string;
+  description?: string;
+  type: 'TASK' | 'BUG' | 'SUBTASK';
+  priority: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
+  status: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'DONE';
+  assignee_id?: string;
+  project_id: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+// Label type for the database
+export type Label = {
+  id: string;
+  name: string;
+  color: string;
+  created_at?: string;
+};
+
+// Comment type for the database
+export type Comment = {
+  id: string;
+  content: string;
+  author_id: string;
+  issue_id: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+// Issue with populated relations for UI
+export type IssueWithLabels = Issue & {
+  labels: Label[];
+  assignee?: User;
+  project?: Project;
+};
+
+// Legacy types (keeping for backward compatibility)
 export type Customer = {
   id: string;
   name: string;
@@ -21,8 +76,6 @@ export type Invoice = {
   customer_id: string;
   amount: number;
   date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
   status: 'pending' | 'paid';
 };
 
