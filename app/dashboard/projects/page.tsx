@@ -74,21 +74,32 @@ export default function SimpleProjectsPage() {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span>{projectIssues.length} issues</span>
-                    <span className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      {todoIssues} To Do
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                      {inProgressIssues} In Progress
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      {doneIssues} Done
-                    </span>
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">{projectIssues.length} issues</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span>To Do</span>
+                      </div>
+                      <span className="font-medium">{todoIssues}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                        <span>In Progress</span>
+                      </div>
+                      <span className="font-medium">{inProgressIssues}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>Done</span>
+                      </div>
+                      <span className="font-medium">{doneIssues}</span>
+                    </div>
                   </div>
                 </div>
               </Link>

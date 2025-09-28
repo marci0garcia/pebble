@@ -68,9 +68,9 @@ export const mockProjects: Project[] = [
   },
   {
     id: '2',
-    name: 'E-commerce Platform',
-    key: 'ECO',
-    description: 'Online shopping platform with payment integration',
+    name: 'Pebble Data Maintenance',
+    key: 'PBL',
+    description: 'Maintaining Data',
   },
   {
     id: '3',
