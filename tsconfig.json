@@ -36,7 +36,7 @@
     ".next/types/**/*.ts",
     "app/lib/placeholder-data.ts",
     "scripts/seed.js"
-  ],
+, "app/lib/auth0.js"  ],
   "exclude": [
     "node_modules"
   ]
