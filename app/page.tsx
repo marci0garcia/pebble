@@ -66,7 +66,7 @@ export default function Page() {
                 alt="Pebble dashboard preview on desktop"
               />
               <Image
-                src="/RocteraSystems.jpg"
+                src="/PebbleFront.jpg"
                 width={640}
                 height={480}
                 sizes="100vw"
