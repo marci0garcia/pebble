@@ -3,13 +3,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbopack",
-    "start": "next start",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "start": "next start"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.10.0",
@@ -35,8 +29,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
-    "@types/react-dom": "19.0.3",
-    "tsx": "^4.7.0"
+    "@types/react-dom": "19.0.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
