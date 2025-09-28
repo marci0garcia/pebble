@@ -24,7 +24,8 @@ CREATE TABLE tasks (
   status VARCHAR(20) CHECK (status IN ('todo', 'in-progress', 'completed', 'cancelled')) DEFAULT 'todo',
   member_id UUID REFERENCES members(id),
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+  due_date DATE
 );
 
 -- Create Users table for authentication
@@ -45,17 +46,17 @@ INSERT INTO members (id, name, email, image_url) VALUES
 ('13D07535-C59E-4157-A011-F8D2EF4E0228', 'Frank Miller', 'frank@company.com', '/customers/frank-miller.png');
 
 -- Insert sample tasks
-INSERT INTO tasks (id, title, description, priority, status, member_id, created_at) VALUES
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d1', 'Implement user authentication', 'Set up user login and registration system with proper security measures', 'high', 'in-progress', '410544b2-4001-4271-9855-fec4b6a6442a', '2025-09-20'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d2', 'Design database schema', 'Create comprehensive database design for the new application', 'medium', 'completed', '3958dc9e-712f-4377-85e9-fec4b6a6442a', '2025-09-18'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d3', 'Setup CI/CD pipeline', 'Configure automated testing and deployment pipeline', 'high', 'todo', '3958dc9e-742f-4377-85e9-fec4b6a6442a', '2025-09-22'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d4', 'Write API documentation', 'Document all API endpoints with examples and usage instructions', 'medium', 'todo', '76d65c26-f784-44a2-ac19-586678f7c2f2', '2025-09-23'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d5', 'Implement responsive design', 'Make the application mobile-friendly and responsive', 'low', 'in-progress', 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B9', '2025-09-24'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d6', 'Security audit', 'Conduct comprehensive security review of the application', 'critical', 'todo', '13D07535-C59E-4157-A011-F8D2EF4E0228', '2025-09-25'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d7', 'Performance optimization', 'Optimize application performance and loading times', 'medium', 'todo', '410544b2-4001-4271-9855-fec4b6a6442a', '2025-09-26'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d8', 'User interface testing', 'Test all user interface components for functionality', 'low', 'completed', '3958dc9e-712f-4377-85e9-fec4b6a6442a', '2025-09-27'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d9', 'Bug fixes for login', 'Fix critical bugs in the user authentication system', 'critical', 'in-progress', '3958dc9e-742f-4377-85e9-fec4b6a6442a', '2025-09-28'),
-('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662da', 'Feature enhancement planning', 'Plan and document future feature enhancements', 'low', 'todo', '76d65c26-f784-44a2-ac19-586678f7c2f2', '2025-09-28');
+INSERT INTO tasks (id, title, description, priority, status, member_id, created_at, due_date) VALUES
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d1', 'Implement user authentication', 'Set up user login and registration system with proper security measures', 'high', 'in-progress', '410544b2-4001-4271-9855-fec4b6a6442a', '2025-09-20', '2025-10-05'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d2', 'Design database schema', 'Create comprehensive database design for the new application', 'medium', 'completed', '3958dc9e-712f-4377-85e9-fec4b6a6442a', '2025-09-18', '2025-09-25'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d3', 'Setup CI/CD pipeline', 'Configure automated testing and deployment pipeline', 'high', 'todo', '3958dc9e-742f-4377-85e9-fec4b6a6442a', '2025-09-22', '2025-10-10'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d4', 'Write API documentation', 'Document all API endpoints with examples and usage instructions', 'medium', 'todo', '76d65c26-f784-44a2-ac19-586678f7c2f2', '2025-09-23', '2025-10-15'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d5', 'Implement responsive design', 'Make the application mobile-friendly and responsive', 'low', 'in-progress', 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B9', '2025-09-24', '2025-11-01'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d6', 'Security audit', 'Conduct comprehensive security review of the application', 'critical', 'todo', '13D07535-C59E-4157-A011-F8D2EF4E0228', '2025-09-25', '2025-09-30'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d7', 'Performance optimization', 'Optimize application performance and loading times', 'medium', 'todo', '410544b2-4001-4271-9855-fec4b6a6442a', '2025-09-26', '2025-10-20'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d8', 'User interface testing', 'Test all user interface components for functionality', 'low', 'completed', '3958dc9e-712f-4377-85e9-fec4b6a6442a', '2025-09-27', '2025-10-01'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662d9', 'Bug fixes for login', 'Fix critical bugs in the user authentication system', 'critical', 'in-progress', '3958dc9e-742f-4377-85e9-fec4b6a6442a', '2025-09-28', '2025-09-29'),
+('6e15e9c6-c5aa-4b52-8cc2-f5ad64b662da', 'Feature enhancement planning', 'Plan and document future feature enhancements', 'low', 'todo', '76d65c26-f784-44a2-ac19-586678f7c2f2', '2025-09-28', '2025-11-15');
 
 -- Insert sample user for authentication
 INSERT INTO users (id, name, email, password) VALUES

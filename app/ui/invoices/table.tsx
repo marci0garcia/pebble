@@ -46,7 +46,14 @@ export default async function InvoicesTable({
                     </p>
                     <p className="text-sm text-gray-600">{task.description}</p>
                     <p className="text-sm capitalize text-blue-600">Priority: {task.priority}</p>
-                    <p>{formatDateToLocal(task.created_at)}</p>
+                    <p className="text-sm text-gray-500">Created: {formatDateToLocal(task.created_at)}</p>
+                    {task.due_date && (
+                      <p className={`text-sm ${
+                        new Date(task.due_date) < new Date() ? 'text-red-600' : 'text-blue-600'
+                      }`}>
+                        Due: {formatDateToLocal(task.due_date)}
+                      </p>
+                    )}
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={task.id} />
@@ -69,7 +76,7 @@ export default async function InvoicesTable({
                   Priority
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Created Date
+                  Due Date
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
@@ -114,7 +121,15 @@ export default async function InvoicesTable({
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(task.created_at)}
+                    {task.due_date ? (
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        new Date(task.due_date) < new Date() ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {formatDateToLocal(task.due_date)}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 text-xs">No due date</span>
+                    )}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <InvoiceStatus status={task.status} />

@@ -27,6 +27,7 @@ export type Task = {
   member_id: string;
   created_at: string;
   updated_at: string;
+  due_date?: string;
 };
 
 export type LatestTask = {
@@ -60,6 +61,7 @@ export type TasksTable = {
   email: string;
   image_url: string;
   created_at: string;
+  due_date?: string;
 };
 
 export type MembersTableType = {
@@ -98,4 +100,5 @@ export type TaskForm = {
   member_id: string;
   priority: 'low' | 'medium' | 'high' | 'critical';
   status: 'todo' | 'in-progress' | 'completed' | 'cancelled';
+  due_date?: string;
 };

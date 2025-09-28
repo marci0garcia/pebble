@@ -87,6 +87,7 @@ export async function fetchFilteredTasks(
         tasks.priority,
         tasks.status,
         tasks.created_at,
+        tasks.due_date,
         members.name,
         members.email,
         members.image_url,
@@ -142,7 +143,8 @@ export async function fetchTaskById(id: string) {
         tasks.description,
         tasks.member_id,
         tasks.priority,
-        tasks.status
+        tasks.status,
+        tasks.due_date
       FROM tasks
       WHERE tasks.id = ${id};
     `;

@@ -14,6 +14,7 @@ const TaskFormSchema = z.object({
   memberId: z.string().min(1, 'Member is required'),
   priority: z.enum(['low', 'medium', 'high', 'critical']),
   status: z.enum(['todo', 'in-progress', 'completed', 'cancelled']),
+  due_date: z.string().optional(),
   created_at: z.string(),
 });
  
@@ -21,19 +22,20 @@ const CreateTask = TaskFormSchema.omit({ id: true, created_at: true });
 const UpdateTask = TaskFormSchema.omit({ id: true, created_at: true });
 
 export async function createTask(formData: FormData) {
-  const { title, description, memberId, priority, status } = CreateTask.parse({
+  const { title, description, memberId, priority, status, due_date } = CreateTask.parse({
     title: formData.get('title'),
     description: formData.get('description'),
     memberId: formData.get('memberId'),
     priority: formData.get('priority'),
     status: formData.get('status'),
+    due_date: formData.get('due_date') || undefined,
   });
 
   const created_at = new Date().toISOString();
 
   await sql`
-    INSERT INTO tasks (title, description, member_id, priority, status, created_at, updated_at)
-    VALUES (${title}, ${description}, ${memberId}, ${priority}, ${status}, ${created_at}, ${created_at})
+    INSERT INTO tasks (title, description, member_id, priority, status, created_at, updated_at, due_date)
+    VALUES (${title}, ${description}, ${memberId}, ${priority}, ${status}, ${created_at}, ${created_at}, ${due_date || null})
   `;
 
   revalidatePath('/dashboard/invoices');
@@ -41,12 +43,13 @@ export async function createTask(formData: FormData) {
 }
 
 export async function updateTask(id: string, formData: FormData) {
-  const { title, description, memberId, priority, status } = UpdateTask.parse({
+  const { title, description, memberId, priority, status, due_date } = UpdateTask.parse({
     title: formData.get('title'),
     description: formData.get('description'),
     memberId: formData.get('memberId'),
     priority: formData.get('priority'),
     status: formData.get('status'),
+    due_date: formData.get('due_date') || undefined,
   });
  
   const updated_at = new Date().toISOString();
@@ -54,7 +57,7 @@ export async function updateTask(id: string, formData: FormData) {
   await sql`
     UPDATE tasks
     SET title = ${title}, description = ${description}, member_id = ${memberId}, 
-        priority = ${priority}, status = ${status}, updated_at = ${updated_at}
+        priority = ${priority}, status = ${status}, updated_at = ${updated_at}, due_date = ${due_date || null}
     WHERE id = ${id}
   `;
  
