@@ -23,7 +23,7 @@ export default function BacklogPage({ params }: PageProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
 
-  const router = useRouter(); // 👈 initialize router
+  const router = useRouter(); 
 
   React.useEffect(() => {
     params.then(setResolvedParams);
@@ -108,7 +108,7 @@ export default function BacklogPage({ params }: PageProps) {
           //all status filter states
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="text-sm border border-gray-300 rounded-md px-4 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-sm border border-gray-300 rounded-md px-7 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Status</option>
             <option value="TODO">To Do</option>
@@ -121,7 +121,7 @@ export default function BacklogPage({ params }: PageProps) {
           //all priority filter states 
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
-            className="text-sm border border-gray-300 rounded-md px-4 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-sm border border-gray-300 rounded-md px-7 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Priority</option>
             <option value="HIGHEST">Highest</option>
