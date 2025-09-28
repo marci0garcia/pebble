@@ -90,10 +90,6 @@ export default function Page() {
             <p className="text-sm text-gray-600">Open‑source license</p>
           </div>
           <div>
-            <p className="text-3xl font-semibold">24/7</p>
-            <p className="text-sm text-gray-600">Community support</p>
-          </div>
-          <div>
             <p className="text-3xl font-semibold">∞</p>
             <p className="text-sm text-gray-600">Scales with your team</p>
           </div>
