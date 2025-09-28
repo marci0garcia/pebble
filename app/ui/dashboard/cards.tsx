@@ -1,40 +1,44 @@
 import {
-  BanknotesIcon,
+  CheckCircleIcon,
   ClockIcon,
   UserGroupIcon,
   InboxIcon,
+  PlayIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
 
 import { fetchCardData } from '@/app/lib/data';
 
 const iconMap = {
-  collected: BanknotesIcon,
-  customers: UserGroupIcon,
-  pending: ClockIcon,
-  invoices: InboxIcon,
+  completed: CheckCircleIcon,
+  members: UserGroupIcon,
+  inProgress: PlayIcon,
+  tasks: InboxIcon,
+  todo: ClockIcon,
 };
 
 export default async function CardWrapper() {
 
   const {
-    numberOfInvoices,
-    numberOfCustomers,
-    totalPaidInvoices,
-    totalPendingInvoices,
+    numberOfTasks,
+    numberOfMembers,
+    todoTasks,
+    inProgressTasks,
+    completedTasks,
+    cancelledTasks,
   } = await fetchCardData();
   
   return (
     <>
-      {/* NOTE: Uncomment this code in Chapter 9 */}
+      {/* Task tracking dashboard cards */}
 
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+      <Card title="Completed Tasks" value={completedTasks} type="completed" />
+      <Card title="In Progress" value={inProgressTasks} type="inProgress" />
+      <Card title="Total Tasks" value={numberOfTasks} type="tasks" />
       <Card
-        title="Total Customers"
-        value={numberOfCustomers}
-        type="customers"
+        title="Team Members"
+        value={numberOfMembers}
+        type="members"
       />
     </>
   );
@@ -47,7 +51,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
+  type: 'tasks' | 'members' | 'inProgress' | 'completed' | 'todo';
 }) {
   const Icon = iconMap[type];
 

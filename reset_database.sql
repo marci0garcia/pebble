@@ -37,12 +37,12 @@ CREATE TABLE users (
 
 -- Insert sample members
 INSERT INTO members (id, name, email, image_url) VALUES
-('410544b2-4001-4271-9855-fec4b6a6442a', 'Alice Johnson', 'alice@company.com', '/default-avatar.png'),
-('3958dc9e-712f-4377-85e9-fec4b6a6442a', 'Bob Smith', 'bob@company.com', '/default-avatar.png'),
-('3958dc9e-742f-4377-85e9-fec4b6a6442a', 'Carol Davis', 'carol@company.com', '/default-avatar.png'),
-('76d65c26-f784-44a2-ac19-586678f7c2f2', 'David Wilson', 'david@company.com', '/default-avatar.png'),
-('CC27C14A-0ACF-4F4A-A6C9-D45682C144B9', 'Emma Brown', 'emma@company.com', '/default-avatar.png'),
-('13D07535-C59E-4157-A011-F8D2EF4E0228', 'Frank Miller', 'frank@company.com', '/default-avatar.png');
+('410544b2-4001-4271-9855-fec4b6a6442a', 'Alice Johnson', 'alice@company.com', '/customers/alice-johnson.png'),
+('3958dc9e-712f-4377-85e9-fec4b6a6442a', 'Bob Smith', 'bob@company.com', '/customers/bob-smith.png'),
+('3958dc9e-742f-4377-85e9-fec4b6a6442a', 'Carol Davis', 'carol@company.com', '/customers/carol-davis.png'),
+('76d65c26-f784-44a2-ac19-586678f7c2f2', 'David Wilson', 'david@company.com', '/customers/david-wilson.png'),
+('CC27C14A-0ACF-4F4A-A6C9-D45682C144B9', 'Emma Brown', 'emma@company.com', '/customers/emma-brown.png'),
+('13D07535-C59E-4157-A011-F8D2EF4E0228', 'Frank Miller', 'frank@company.com', '/customers/frank-miller.png');
 
 -- Insert sample tasks
 INSERT INTO tasks (id, title, description, priority, status, member_id, created_at) VALUES

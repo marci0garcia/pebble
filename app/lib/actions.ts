@@ -7,56 +7,62 @@ import postgres from 'postgres';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
  
-const FormSchema = z.object({
+const TaskFormSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(['pending', 'paid']),
-  date: z.string(),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  memberId: z.string().min(1, 'Member is required'),
+  priority: z.enum(['low', 'medium', 'high', 'critical']),
+  status: z.enum(['todo', 'in-progress', 'completed', 'cancelled']),
+  created_at: z.string(),
 });
  
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const CreateTask = TaskFormSchema.omit({ id: true, created_at: true });
+const UpdateTask = TaskFormSchema.omit({ id: true, created_at: true });
 
-export async function createInvoice(formData: FormData) {
-  const { customerId, amount, status } =  CreateInvoice.parse({
-    customerId: formData.get('customerId'),
-    amount: formData.get('amount'),
+export async function createTask(formData: FormData) {
+  const { title, description, memberId, priority, status } = CreateTask.parse({
+    title: formData.get('title'),
+    description: formData.get('description'),
+    memberId: formData.get('memberId'),
+    priority: formData.get('priority'),
     status: formData.get('status'),
   });
 
-  const amountInCents = amount * 100;
-  const date = new Date().toISOString().split('T')[0];
+  const created_at = new Date().toISOString();
 
   await sql`
-    INSERT INTO invoices (customer_id, amount, status, date)
-    VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+    INSERT INTO tasks (title, description, member_id, priority, status, created_at, updated_at)
+    VALUES (${title}, ${description}, ${memberId}, ${priority}, ${status}, ${created_at}, ${created_at})
   `;
 
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
+  revalidatePath('/dashboard/tasks');
+  redirect('/dashboard/tasks');
 }
 
-export async function updateInvoice(id: string, formData: FormData) {
-  const { customerId, amount, status } = UpdateInvoice.parse({
-    customerId: formData.get('customerId'),
-    amount: formData.get('amount'),
+export async function updateTask(id: string, formData: FormData) {
+  const { title, description, memberId, priority, status } = UpdateTask.parse({
+    title: formData.get('title'),
+    description: formData.get('description'),
+    memberId: formData.get('memberId'),
+    priority: formData.get('priority'),
     status: formData.get('status'),
   });
  
-  const amountInCents = amount * 100;
+  const updated_at = new Date().toISOString();
  
   await sql`
-    UPDATE invoices
-    SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+    UPDATE tasks
+    SET title = ${title}, description = ${description}, member_id = ${memberId}, 
+        priority = ${priority}, status = ${status}, updated_at = ${updated_at}
     WHERE id = ${id}
   `;
  
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
+  revalidatePath('/dashboard/tasks');
+  redirect('/dashboard/tasks');
 }
 
-export async function deleteInvoice(id: string) {
-  await sql`DELETE FROM invoices WHERE id = ${id}`;
-  revalidatePath('/dashboard/invoices');
+export async function deleteTask(id: string) {
+  await sql`DELETE FROM tasks WHERE id = ${id}`;
+  revalidatePath('/dashboard/tasks');
 }

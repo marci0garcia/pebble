@@ -2,6 +2,7 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+
 export type User = {
   id: string;
   name: string;
@@ -9,80 +10,92 @@ export type User = {
   password: string;
 };
 
-export type Customer = {
+export type Member = {
   id: string;
   name: string;
   email: string;
   image_url: string;
+  created_at: string;
 };
 
-export type Invoice = {
+export type Task = {
   id: string;
-  customer_id: string;
-  amount: number;
-  date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'todo' | 'in-progress' | 'completed' | 'cancelled';
+  member_id: string;
+  created_at: string;
+  updated_at: string;
 };
 
-export type Revenue = {
-  month: string;
-  revenue: number;
-};
-
-export type LatestInvoice = {
+export type LatestTask = {
   id: string;
+  title: string;
   name: string;
   image_url: string;
   email: string;
-  amount: string;
+  priority: string;
+  status: string;
 };
 
-// The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
-  amount: number;
-};
-
-export type InvoicesTable = {
+export type LatestTaskRaw = {
   id: string;
-  customer_id: string;
+  title: string;
+  name: string;
+  image_url: string;
+  email: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'todo' | 'in-progress' | 'completed' | 'cancelled';
+};
+
+export type TasksTable = {
+  id: string;
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'todo' | 'in-progress' | 'completed' | 'cancelled';
+  member_id: string;
   name: string;
   email: string;
   image_url: string;
-  date: string;
-  amount: number;
-  status: 'pending' | 'paid';
+  created_at: string;
 };
 
-export type CustomersTableType = {
-  id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  total_invoices: number;
-  total_pending: number;
-  total_paid: number;
-};
-
-export type FormattedCustomersTable = {
+export type MembersTableType = {
   id: string;
   name: string;
   email: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
+  total_tasks: number;
+  total_todo: number;
+  total_in_progress: number;
+  total_completed: number;
+  total_cancelled: number;
 };
 
-export type CustomerField = {
+export type FormattedMembersTable = {
+  id: string;
+  name: string;
+  email: string;
+  image_url: string;
+  total_tasks: number;
+  total_todo: string;
+  total_in_progress: string;
+  total_completed: string;
+  total_cancelled: string;
+};
+
+export type MemberField = {
   id: string;
   name: string;
 };
 
-export type InvoiceForm = {
+export type TaskForm = {
   id: string;
-  customer_id: string;
-  amount: number;
-  status: 'pending' | 'paid';
+  title: string;
+  description: string;
+  member_id: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'todo' | 'in-progress' | 'completed' | 'cancelled';
 };
