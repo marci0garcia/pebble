@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { updateTask } from '@/app/lib/actions';
+import { useRouter } from 'next/navigation';
 
 export default function EditInvoiceForm({
   task,
@@ -20,9 +21,16 @@ export default function EditInvoiceForm({
   task: TaskForm;
   members: MemberField[];
 }) {
+  const router = useRouter();
   const updateTaskWithId = updateTask.bind(null, task.id);
+  
+  const handleSubmit = async (formData: FormData) => {
+    await updateTaskWithId(formData);
+    router.push('/dashboard/invoices');
+  };
+
   return (
-    <form action={updateTaskWithId}>
+    <form action={handleSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Task Title */}
         <div className="mb-4">

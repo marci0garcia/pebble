@@ -36,8 +36,8 @@ export async function createTask(formData: FormData) {
     VALUES (${title}, ${description}, ${memberId}, ${priority}, ${status}, ${created_at}, ${created_at})
   `;
 
-  revalidatePath('/dashboard/tasks');
-  redirect('/dashboard/tasks');
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
 }
 
 export async function updateTask(id: string, formData: FormData) {
@@ -58,11 +58,11 @@ export async function updateTask(id: string, formData: FormData) {
     WHERE id = ${id}
   `;
  
-  revalidatePath('/dashboard/tasks');
-  redirect('/dashboard/tasks');
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
 }
 
 export async function deleteTask(id: string) {
   await sql`DELETE FROM tasks WHERE id = ${id}`;
-  revalidatePath('/dashboard/tasks');
+  revalidatePath('/dashboard/invoices');
 }

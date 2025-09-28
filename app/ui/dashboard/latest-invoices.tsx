@@ -13,7 +13,7 @@ export default async function LatestTasks() {
         Latest Tasks
       </h2>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
-        {/* NOTE: Uncomment this code in Chapter 7 */}
+        
 
         <div className="bg-white px-6">
           {latestTasks.map((task, i) => {
