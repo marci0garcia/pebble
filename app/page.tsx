@@ -113,11 +113,12 @@ export default function Page() {
             <h3 className="mb-1 font-semibold">Role‑based access</h3>
             <p className="text-sm text-gray-700">Admin and member roles keep permissions simple while staying secure.</p>
           </div>
-          <div className="rounded-2xl border p-6 shadow-sm">
+           {/* <div className="rounded-2xl border p-6 shadow-sm"> 
             <CalendarIcon className="mb-3 h-6 w-6" />
             <h3 className="mb-1 font-semibold">Calendar friendly</h3>
             <p className="text-sm text-gray-700">Optional Google Calendar iframe for visibility—enable in settings when you’re ready.</p>
           </div>
+          */}
         </div>
       </section>
 
