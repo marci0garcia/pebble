@@ -1,4 +1,5 @@
 import { getProjectByKey, getIssuesByProject, mockUsers } from '@/app/lib/mock-data';
+import { ProjectTabs } from '@/app/ui/projects/project-tabs';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -26,8 +27,10 @@ export default async function SummaryPage({ params }: PageProps) {
   const completionRate = totalIssues > 0 ? Math.round((doneCount / totalIssues) * 100) : 0;
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
+    <div>
+      <ProjectTabs projectKey={key} />
+      <div className="p-6">
+        <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-2">Project Summary</h2>
         <p className="text-gray-600">Overview of project progress and key metrics</p>
       </div>
@@ -157,7 +160,9 @@ export default async function SummaryPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+      </div>
     </div>
   );
 }
+
 

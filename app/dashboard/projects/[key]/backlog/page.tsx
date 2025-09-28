@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { getProjectByKey, getIssuesByProject, mockUsers, mockLabels, updateIssueInMockData } from '@/app/lib/mock-data';
+import { getProjectByKey, getIssuesByProject, updateIssueInMockData } from '@/app/lib/mock-data';
 import { notFound } from 'next/navigation';
 import { CreateIssueForm } from '@/app/ui/projects/create-issue-form';
 import { IssueDetailModal } from '@/app/ui/projects/issue-detail-modal';
 import { IssueCard } from '@/app/ui/projects/issue-card';
-import { PlusIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import { ProjectTabs } from '@/app/ui/projects/project-tabs';
+import { PlusIcon, FunnelIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 
 interface PageProps {
   params: Promise<{
@@ -21,7 +23,8 @@ export default function BacklogPage({ params }: PageProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
 
-  // Resolve params on client side
+  const router = useRouter(); // 👈 initialize router
+
   React.useEffect(() => {
     params.then(setResolvedParams);
   }, [params]);
@@ -38,15 +41,12 @@ export default function BacklogPage({ params }: PageProps) {
   }
 
   const allProjectIssues = getIssuesByProject(project.id);
-  
-  // Filter issues based on selected filters
   const filteredIssues = allProjectIssues.filter(issue => {
     const statusMatch = filterStatus === 'all' || issue.status === filterStatus;
     const priorityMatch = filterPriority === 'all' || issue.priority === filterPriority;
     return statusMatch && priorityMatch;
   });
 
-  // Sort issues by priority and status
   const sortedIssues = [...filteredIssues].sort((a, b) => {
     const priorityOrder = { 'HIGHEST': 5, 'HIGH': 4, 'MEDIUM': 3, 'LOW': 2, 'LOWEST': 1 };
     const statusOrder = { 'TODO': 1, 'IN_PROGRESS': 2, 'IN_REVIEW': 3, 'DONE': 4 };
@@ -62,28 +62,39 @@ export default function BacklogPage({ params }: PageProps) {
 
   const handleUpdateIssue = (issueId: string, updates: any) => {
     updateIssueInMockData(issueId, updates);
-    // Force re-render by updating state
     setSelectedIssue(null);
-    setTimeout(() => {
-      // This will trigger a re-render with updated data
-    }, 100);
+    setTimeout(() => {}, 100);
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Backlog</h2>
-          <p className="text-gray-600">Manage and prioritize project issues</p>
+    <div>
+      {/* Project Tabs Navigation */}
+      <ProjectTabs projectKey={key} />
+      
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          {/* Back Button 👇 */}
+          <button
+            onClick={() => router.push('/dashboard/projects')} 
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+            Back to Projects
+          </button>
+
+          <div className="flex-1 text-center">
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">Backlog</h2>
+            <p className="text-gray-600">Manage and prioritize project issues</p>
+          </div>
+
+          <button 
+            onClick={() => setShowCreateForm(true)}
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <PlusIcon className="w-5 h-5" />
+            Create Issue
+          </button>
         </div>
-        <button 
-          onClick={() => setShowCreateForm(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <PlusIcon className="w-5 h-5" />
-          Create Issue
-        </button>
-      </div>
 
       {/* Filters */}
       <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
@@ -94,9 +105,10 @@ export default function BacklogPage({ params }: PageProps) {
           </div>
           
           <select
+          //all status filter states
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-sm border border-gray-300 rounded-md px-4 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Status</option>
             <option value="TODO">To Do</option>
@@ -106,9 +118,10 @@ export default function BacklogPage({ params }: PageProps) {
           </select>
 
           <select
+          //all priority filter states 
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
-            className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-sm border border-gray-300 rounded-md px-4 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">All Priority</option>
             <option value="HIGHEST">Highest</option>
@@ -186,6 +199,8 @@ export default function BacklogPage({ params }: PageProps) {
           onUpdateIssue={handleUpdateIssue}
         />
       )}
+      </div>
     </div>
   );
+  
 }

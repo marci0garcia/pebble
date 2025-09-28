@@ -1,6 +1,6 @@
 import { getProjectByKey } from '@/app/lib/mock-data';
-import { ProjectHeader } from '@/app/ui/projects/project-header';
 import { KanbanBoard } from '@/app/ui/projects/kanban-board';
+import { ProjectTabs } from '@/app/ui/projects/project-tabs';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -20,7 +20,7 @@ export default async function BoardPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <ProjectHeader project={project} />
+      <ProjectTabs projectKey={key} />
       <div className="flex-1 overflow-hidden">
         <KanbanBoard projectId={project.id} projectKey={project.key} />
       </div>

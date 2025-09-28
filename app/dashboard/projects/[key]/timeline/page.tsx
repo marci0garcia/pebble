@@ -1,4 +1,5 @@
 import { getProjectByKey, getIssuesByProject } from '@/app/lib/mock-data';
+import { ProjectTabs } from '@/app/ui/projects/project-tabs';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -19,11 +20,13 @@ export default async function TimelinePage({ params }: PageProps) {
   const projectIssues = getIssuesByProject(project.id);
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Project Timeline</h2>
-        <p className="text-gray-600">Track project milestones and issue progression over time</p>
-      </div>
+    <div>
+      <ProjectTabs projectKey={key} />
+      <div className="p-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Project Timeline</h2>
+          <p className="text-gray-600">Track project milestones and issue progression over time</p>
+        </div>
 
       {/* Timeline View */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -108,7 +111,9 @@ export default async function TimelinePage({ params }: PageProps) {
           ))}
         </div>
       </div>
+      </div>
     </div>
   );
 }
+
 
