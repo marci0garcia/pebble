@@ -50,7 +50,7 @@ export default function Page() {
               <li className="inline-flex items-center gap-2"><CheckCircleIcon className="h-5 w-5 text-emerald-600" /> Assign & track tasks</li>
               <li className="inline-flex items-center gap-2"><CheckCircleIcon className="h-5 w-5 text-emerald-600" /> Teams & roles (admin/member)</li>
               <li className="inline-flex items-center gap-2"><CheckCircleIcon className="h-5 w-5 text-emerald-600" /> Status & priority workflows</li>
-              <li className="inline-flex items-center gap-2"><CheckCircleIcon className="h-5 w-5 text-emerald-600" /> Calendar link & reminders</li>
+              {/* <li className="inline-flex items-center gap-2"><CheckCircleIcon className="h-5 w-5 text-emerald-600" /> Calendar link & reminders</li> */}
             </ul>
           </div>
 
