@@ -1,22 +1,12 @@
 import { Card } from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
+import LatestIssues from '@/app/ui/dashboard/latest-invoices';
 import { audiowide, lusitana } from '@/app/ui/fonts';
-import { fetchCardData} from '@/app/lib/data';
 import { Suspense } from 'react';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton} from '@/app/ui/skeletons';
 import CardWrapper from '@/app/ui/dashboard/cards';
-import { Audiowide } from 'next/font/google';
-
 
 export default async function Page() {
-  
-  const {
-    numberOfInvoices,
-    numberOfCustomers,
-    totalPaidInvoices,
-    totalPendingInvoices,
-  } = await fetchCardData();
   return (
     <main>
       <h1 className={`${audiowide.className} mb-4 text-xl md:text-2xl`}>
@@ -32,7 +22,7 @@ export default async function Page() {
           <RevenueChart />
         </Suspense>
         <Suspense fallback={<LatestInvoicesSkeleton />}>
-          <LatestInvoices />
+          <LatestIssues />
         </Suspense>
       </div>
     </main>

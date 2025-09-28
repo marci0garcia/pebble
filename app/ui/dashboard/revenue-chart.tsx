@@ -1,8 +1,9 @@
+//THIS IS SIMPLY A DUMMY COMPONENT, SUBJECT TO CHANGE IN THE FUTURE
+
+
 import { generateYAxis } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-import { Revenue } from '@/app/lib/definitions';
-import { fetchRevenue } from '@/app/lib/data';
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -10,11 +11,24 @@ import { fetchRevenue } from '@/app/lib/data';
 // https://www.chartjs.org/
 // https://airbnb.io/visx/
 
-export default async function RevenueChart() {
-  const revenue = await fetchRevenue(); 
+export default function RevenueChart() {
+  // Mock revenue data for the last 12 months
+  const revenue = [
+    { month: 'Jan', revenue: 2000 },
+    { month: 'Feb', revenue: 1800 },
+    { month: 'Mar', revenue: 2200 },
+    { month: 'Apr', revenue: 2500 },
+    { month: 'May', revenue: 2300 },
+    { month: 'Jun', revenue: 3200 },
+    { month: 'Jul', revenue: 3500 },
+    { month: 'Aug', revenue: 3700 },
+    { month: 'Sep', revenue: 2500 },
+    { month: 'Oct', revenue: 2800 },
+    { month: 'Nov', revenue: 3000 },
+    { month: 'Dec', revenue: 4800 },
+  ];
+  
   const chartHeight = 350;
-  // NOTE: Uncomment this code in Chapter 7
-
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   if (!revenue || revenue.length === 0) {

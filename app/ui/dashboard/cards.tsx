@@ -1,3 +1,5 @@
+'use client';
+
 import {
   BanknotesIcon,
   ClockIcon,
@@ -5,8 +7,7 @@ import {
   InboxIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-
-import { fetchCardData } from '@/app/lib/data';
+import { mockProjects, mockIssues, mockUsers } from '@/app/lib/mock-data';
 
 const iconMap = {
   collected: BanknotesIcon,
@@ -15,25 +16,21 @@ const iconMap = {
   invoices: InboxIcon,
 };
 
-export default async function CardWrapper() {
-
-  const {
-    numberOfInvoices,
-    numberOfCustomers,
-    totalPaidInvoices,
-    totalPendingInvoices,
-  } = await fetchCardData();
+export default function CardWrapper() {
+  // Calculate mock data stats
+  const totalProjects = mockProjects.length;
+  const totalIssues = mockIssues.length;
+  const completedIssues = mockIssues.filter(issue => issue.status === 'DONE').length;
+  const pendingIssues = mockIssues.filter(issue => issue.status === 'TODO' || issue.status === 'IN_PROGRESS' || issue.status === 'IN_REVIEW').length;
   
   return (
     <>
-      {/* NOTE: Uncomment this code in Chapter 9 */}
-
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+      <Card title="Completed Issues" value={completedIssues} type="collected" />
+      <Card title="Pending Issues" value={pendingIssues} type="pending" />
+      <Card title="Total Issues" value={totalIssues} type="invoices" />
       <Card
-        title="Total Customers"
-        value={numberOfCustomers}
+        title="Total Projects"
+        value={totalProjects}
         type="customers"
       />
     </>
