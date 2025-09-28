@@ -23,11 +23,7 @@ const links = [
     href: '/dashboard/projects',
     icon: Squares2X2Icon,
   },
-  {
-    name: 'Boards',
-    href: '/dashboard/boards',
-    icon: ClipboardDocumentListIcon,
-  },
+  
   { name: 'Team', href: '/dashboard/team', icon: UserGroupIcon },
 ];
 
