@@ -8,7 +8,7 @@ import { fetchLatestTasks } from '@/app/lib/data';
 export default async function LatestTasks() {
     const latestTasks = await fetchLatestTasks();
   return (
-    <div className="flex w-full flex-col md:col-span-4">
+    <div className="flex w-full flex-col md:col-span-4 lg:col-span-8">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         Latest Tasks
       </h2>
