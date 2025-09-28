@@ -57,7 +57,7 @@ export default function Page() {
           <div className="flex items-center justify-center md:justify-end">
             <div className="w-full max-w-2xl">
               <Image
-                src="/RocteraSystems.jpg"
+                src="/PebbleFront.jpg"
                 width={1100}
                 height={780}
                 priority
